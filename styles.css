@@ -1,102 +1,80 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0d0d0d;
-    color: white;
-}
+document.addEventListener("DOMContentLoaded", function () {
 
-.hidden {
-    display: none;
-}
+    const songs = [
+        { name: "Hawái", scoreFan: 0, scoreCasual: 0 },
+        { name: "Felices los 4", scoreFan: 0, scoreCasual: 0 },
+        { name: "Sobrio", scoreFan: 0, scoreCasual: 0 },
+        { name: "Borró Cassette", scoreFan: 0, scoreCasual: 0 },
+        { name: "Corazón", scoreFan: 0, scoreCasual: 0 },
+        { name: "Chantaje", scoreFan: 0, scoreCasual: 0 },
+        { name: "El Perdedor", scoreFan: 0, scoreCasual: 0 },
+        { name: "ADMV", scoreFan: 0, scoreCasual: 0 },
+        { name: "HP", scoreFan: 0, scoreCasual: 0 },
+        { name: "11 PM", scoreFan: 0, scoreCasual: 0 }
+    ];
 
-/* Pantalla inicial */
-.start-screen {
-    text-align: center;
-    padding-top: 100px;
-}
+    let currentA, currentB;
 
-.start-buttons button {
-    padding: 15px 30px;
-    margin: 20px;
-    font-size: 16px;
-    background: #1f1f1f;
-    border: 1px solid #444;
-    color: white;
-    border-radius: 8px;
-    cursor: pointer;
-}
+    const optionA = document.getElementById("optionA");
+    const optionB = document.getElementById("optionB");
+    const rankingDiv = document.getElementById("ranking");
+    const showRankingBtn = document.getElementById("showRanking");
+    const newBattleBtn = document.getElementById("newBattle");
+    const listenerTypeSelect = document.getElementById("listenerType");
 
-.start-buttons button:hover {
-    background: #333;
-}
+    function generateBattle() {
+        let indexA = Math.floor(Math.random() * songs.length);
+        let indexB;
 
-/* Layout principal */
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 40px;
-}
+        do {
+            indexB = Math.floor(Math.random() * songs.length);
+        } while (indexA === indexB);
 
-.card {
-    background: #141414;
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 0 10px rgba(255,255,255,0.05);
-}
+        currentA = songs[indexA];
+        currentB = songs[indexB];
 
-.card h2 {
-    margin-top: 0;
-}
+        optionA.textContent = currentA.name;
+        optionB.textContent = currentB.name;
+    }
 
-label {
-    display: block;
-    margin-top: 10px;
-}
+    function vote(song) {
+        const type = listenerTypeSelect.value;
 
-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    background: #1f1f1f;
-    color: white;
-    border: 1px solid #333;
-    border-radius: 6px;
-}
+        if (type === "fan") {
+            song.scoreFan++;
+        } else {
+            song.scoreCasual++;
+        }
 
-.battle {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-}
+        generateBattle();
+    }
 
-.song-btn {
-    padding: 12px;
-    background: #1f1f1f;
-    border: 1px solid #333;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-}
+    function showRanking() {
+        const type = listenerTypeSelect.value;
 
-.song-btn:hover {
-    background: #333;
-}
+        let sorted = [...songs].sort((a, b) => {
+            if (type === "fan") {
+                return b.scoreFan - a.scoreFan;
+            } else {
+                return b.scoreCasual - a.scoreCasual;
+            }
+        });
 
-.small-btn {
-    margin-top: 15px;
-    padding: 8px 12px;
-    background: white;
-    color: black;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+        rankingDiv.innerHTML = "";
 
-.info {
-    font-size: 12px;
-    color: #aaa;
-    margin-top: 15px;
-}
+        sorted.forEach((song, index) => {
+            let score = type === "fan" ? song.scoreFan : song.scoreCasual;
+            rankingDiv.innerHTML += `
+                <p>${index + 1}. ${song.name}
+                <span style="float:right">${score}</span></p>
+            `;
+        });
+    }
+
+    optionA.addEventListener("click", () => vote(currentA));
+    optionB.addEventListener("click", () => vote(currentB));
+    showRankingBtn.addEventListener("click", showRanking);
+    newBattleBtn.addEventListener("click", generateBattle);
+
+    generateBattle();
+});
