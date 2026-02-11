@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const newBattleBtn = document.getElementById("newBattle");
     const listenerTypeSelect = document.getElementById("listenerType");
 
+    // --- Generar duelo ---
     function generateBattle() {
         let indexA = Math.floor(Math.random() * songs.length);
         let indexB;
@@ -37,6 +38,7 @@ document.addEventListener("DOMContentLoaded", function () {
         optionB.textContent = currentB.name;
     }
 
+    // --- Votar ---
     function vote(song) {
         const type = listenerTypeSelect.value;
 
@@ -49,15 +51,12 @@ document.addEventListener("DOMContentLoaded", function () {
         generateBattle();
     }
 
+    // --- Mostrar ranking ---
     function showRanking() {
         const type = listenerTypeSelect.value;
 
         let sorted = [...songs].sort((a, b) => {
-            if (type === "fan") {
-                return b.scoreFan - a.scoreFan;
-            } else {
-                return b.scoreCasual - a.scoreCasual;
-            }
+            return type === "fan" ? b.scoreFan - a.scoreFan : b.scoreCasual - a.scoreCasual;
         });
 
         rankingDiv.innerHTML = "";
@@ -71,10 +70,38 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // --- Exportar votos a CSV ---
+    function exportVotes() {
+        let csvContent = "data:text/csv;charset=utf-8,";
+        csvContent += "Canción,Score Fan,Score Casual\n";
+
+        songs.forEach(song => {
+            csvContent += `${song.name},${song.scoreFan},${song.scoreCasual}\n`;
+        });
+
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "maluma_votes.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    // --- Eventos ---
     optionA.addEventListener("click", () => vote(currentA));
     optionB.addEventListener("click", () => vote(currentB));
     showRankingBtn.addEventListener("click", showRanking);
     newBattleBtn.addEventListener("click", generateBattle);
 
+    // --- Botón de exportar ---
+    const exportBtn = document.createElement("button");
+    exportBtn.textContent = "💾 Exportar votos";
+    exportBtn.className = "small-btn";
+    exportBtn.style.marginTop = "10px";
+    exportBtn.addEventListener("click", exportVotes);
+    document.querySelector(".card:last-child").appendChild(exportBtn);
+
+    // --- Iniciar duelo inicial ---
     generateBattle();
 });
