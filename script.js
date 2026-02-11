@@ -1,72 +1,80 @@
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #0d0d0d;
-    color: white;
-}
+document.addEventListener("DOMContentLoaded", function () {
 
-.main-title {
-    text-align: center;
-    margin-top: 30px;
-}
+    const songs = [
+        { name: "Hawái", scoreFan: 0, scoreCasual: 0 },
+        { name: "Felices los 4", scoreFan: 0, scoreCasual: 0 },
+        { name: "Sobrio", scoreFan: 0, scoreCasual: 0 },
+        { name: "Borró Cassette", scoreFan: 0, scoreCasual: 0 },
+        { name: "Corazón", scoreFan: 0, scoreCasual: 0 },
+        { name: "Chantaje", scoreFan: 0, scoreCasual: 0 },
+        { name: "El Perdedor", scoreFan: 0, scoreCasual: 0 },
+        { name: "ADMV", scoreFan: 0, scoreCasual: 0 },
+        { name: "HP", scoreFan: 0, scoreCasual: 0 },
+        { name: "11 PM", scoreFan: 0, scoreCasual: 0 }
+    ];
 
-.container {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 40px;
-}
+    let currentA, currentB;
 
-.card {
-    background: #141414;
-    padding: 20px;
-    border-radius: 12px;
-    width: 300px;
-    box-shadow: 0 0 10px rgba(255,255,255,0.05);
-}
+    const optionA = document.getElementById("optionA");
+    const optionB = document.getElementById("optionB");
+    const rankingDiv = document.getElementById("ranking");
+    const showRankingBtn = document.getElementById("showRanking");
+    const newBattleBtn = document.getElementById("newBattle");
+    const listenerTypeSelect = document.getElementById("listenerType");
 
-select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 10px;
-    background: #1f1f1f;
-    color: white;
-    border: 1px solid #333;
-    border-radius: 6px;
-}
+    function generateBattle() {
+        let indexA = Math.floor(Math.random() * songs.length);
+        let indexB;
 
-.battle {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-top: 15px;
-}
+        do {
+            indexB = Math.floor(Math.random() * songs.length);
+        } while (indexA === indexB);
 
-.song-btn {
-    padding: 12px;
-    background: #1f1f1f;
-    border: 1px solid #333;
-    color: white;
-    border-radius: 6px;
-    cursor: pointer;
-}
+        currentA = songs[indexA];
+        currentB = songs[indexB];
 
-.song-btn:hover {
-    background: #333;
-}
+        optionA.textContent = currentA.name;
+        optionB.textContent = currentB.name;
+    }
 
-.small-btn {
-    margin-top: 15px;
-    padding: 8px 12px;
-    background: white;
-    color: black;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+    function vote(song) {
+        const type = listenerTypeSelect.value;
 
-.info {
-    font-size: 12px;
-    color: #aaa;
-    margin-top: 15px;
-}
+        if (type === "fan") {
+            song.scoreFan++;
+        } else {
+            song.scoreCasual++;
+        }
+
+        generateBattle();
+    }
+
+    function showRanking() {
+        const type = listenerTypeSelect.value;
+
+        let sorted = [...songs].sort((a, b) => {
+            if (type === "fan") {
+                return b.scoreFan - a.scoreFan;
+            } else {
+                return b.scoreCasual - a.scoreCasual;
+            }
+        });
+
+        rankingDiv.innerHTML = "";
+
+        sorted.forEach((song, index) => {
+            let score = type === "fan" ? song.scoreFan : song.scoreCasual;
+            rankingDiv.innerHTML += `
+                <p>${index + 1}. ${song.name}
+                <span style="float:right">${score}</span></p>
+            `;
+        });
+    }
+
+    optionA.addEventListener("click", () => vote(currentA));
+    optionB.addEventListener("click", () => vote(currentB));
+    showRankingBtn.addEventListener("click", showRanking);
+    newBattleBtn.addEventListener("click", generateBattle);
+
+    generateBattle();
+});
