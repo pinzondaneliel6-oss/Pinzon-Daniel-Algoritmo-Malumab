@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MALUMA</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<!-- PANTALLA INICIAL -->
+<div id="startScreen" class="start-screen">
+    <h1>🔥 MALUMA</h1>
+    <p>¿Qué tipo de oyente eres?</p>
+
+    <div class="start-buttons">
+        <button onclick="startApp('fan')">👑 Soy Fan</button>
+        <button onclick="startApp('casual')">🎧 Oyente casual</button>
+    </div>
+</div>
+
+<!-- APP PRINCIPAL -->
+<div id="app" class="container hidden">
+
+    <!-- CONFIG -->
+    <div class="card">
+        <h2>1) Configura</h2>
+
+        <label>Tipo de oyente</label>
+        <select id="listenerType" disabled>
+            <option value="fan">Fan</option>
+            <option value="casual">Oyente casual</option>
+        </select>
+
+        <p class="info">
+            El ranking cambia según quién escucha.
+        </p>
+    </div>
+
+    <!-- COMPARACIÓN -->
+    <div class="card">
+        <h2>2) Elige</h2>
+        <p id="question">¿Cuál canción prefieres?</p>
+
+        <div class="battle">
+            <button id="optionA" class="song-btn"></button>
+            <button id="optionB" class="song-btn"></button>
+        </div>
+
+        <button onclick="showRanking()" class="small-btn">
+            Ver Top 10
+        </button>
+    </div>
+
+    <!-- RANKING -->
+    <div class="card">
+        <h2>3) Ranking (Top 10)</h2>
+        <div id="ranking"></div>
+        <p class="info">
+            Ranking filtrado por tipo de oyente.
+        </p>
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
