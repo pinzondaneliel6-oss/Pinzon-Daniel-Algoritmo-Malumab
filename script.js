@@ -1,88 +1,72 @@
-// =============================
-// BASE DEL ALGORITMO (CourseMash adaptado a MALUMA)
-// =============================
-
-const songs = [
-    { name: "Hawái", scoreFan: 0, scoreCasual: 0 },
-    { name: "Felices los 4", scoreFan: 0, scoreCasual: 0 },
-    { name: "Sobrio", scoreFan: 0, scoreCasual: 0 },
-    { name: "Borró Cassette", scoreFan: 0, scoreCasual: 0 },
-    { name: "Corazón", scoreFan: 0, scoreCasual: 0 },
-    { name: "Chantaje", scoreFan: 0, scoreCasual: 0 },
-    { name: "El Perdedor", scoreFan: 0, scoreCasual: 0 },
-    { name: "ADMV", scoreFan: 0, scoreCasual: 0 },
-    { name: "HP", scoreFan: 0, scoreCasual: 0 },
-    { name: "11 PM", scoreFan: 0, scoreCasual: 0 }
-];
-
-let currentA, currentB;
-let listenerType = "";
-
-// =============================
-// INICIO
-// =============================
-
-function startApp(type) {
-    listenerType = type;
-
-    document.getElementById("startScreen").classList.add("hidden");
-    document.getElementById("app").classList.remove("hidden");
-
-    document.getElementById("listenerType").value = type;
-
-    generateBattle();
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background-color: #0d0d0d;
+    color: white;
 }
 
-// =============================
-// COMPARACIÓN A/B
-// =============================
-
-function generateBattle() {
-    let indexA = Math.floor(Math.random() * songs.length);
-    let indexB;
-
-    do {
-        indexB = Math.floor(Math.random() * songs.length);
-    } while (indexA === indexB);
-
-    currentA = songs[indexA];
-    currentB = songs[indexB];
-
-    document.getElementById("optionA").textContent = currentA.name;
-    document.getElementById("optionB").textContent = currentB.name;
+.main-title {
+    text-align: center;
+    margin-top: 30px;
 }
 
-function vote(song) {
-    if (listenerType === "fan") {
-        song.scoreFan++;
-    } else {
-        song.scoreCasual++;
-    }
-
-    generateBattle();
+.container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    padding: 40px;
 }
 
-document.getElementById("optionA").addEventListener("click", () => vote(currentA));
-document.getElementById("optionB").addEventListener("click", () => vote(currentB));
+.card {
+    background: #141414;
+    padding: 20px;
+    border-radius: 12px;
+    width: 300px;
+    box-shadow: 0 0 10px rgba(255,255,255,0.05);
+}
 
-// =============================
-// RANKING
-// =============================
+select {
+    width: 100%;
+    padding: 8px;
+    margin-top: 10px;
+    background: #1f1f1f;
+    color: white;
+    border: 1px solid #333;
+    border-radius: 6px;
+}
 
-function showRanking() {
-    let sorted;
+.battle {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 15px;
+}
 
-    if (listenerType === "fan") {
-        sorted = [...songs].sort((a, b) => b.scoreFan - a.scoreFan);
-    } else {
-        sorted = [...songs].sort((a, b) => b.scoreCasual - a.scoreCasual);
-    }
+.song-btn {
+    padding: 12px;
+    background: #1f1f1f;
+    border: 1px solid #333;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+}
 
-    const rankingDiv = document.getElementById("ranking");
-    rankingDiv.innerHTML = "";
+.song-btn:hover {
+    background: #333;
+}
 
-    sorted.slice(0, 10).forEach((song, index) => {
-        let score = listenerType === "fan" ? song.scoreFan : song.scoreCasual;
-        rankingDiv.innerHTML += `<p>${index + 1}. ${song.name} <span style="float:right">${score}</span></p>`;
-    });
+.small-btn {
+    margin-top: 15px;
+    padding: 8px 12px;
+    background: white;
+    color: black;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.info {
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 15px;
 }
